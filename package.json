@@ -1,5 +1,5 @@
 {
-  "name": "therese_reviews",
+  "name": "richard_reviews",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,27 +7,30 @@
     "test": "jest",
     "build": "webpack -d --watch",
     "start": "nodemon server/index.js",
-    "startDocker": "node db/seed.js && sleep 2 && nodemon server/index.js",
-    "seed": "node db/seed.js"
+    "startDocker": "concurrently --kill-others \"npm run seed\" \"npm run start\"",
+    "seed": "node db/seed.js",
+    "mysql:setup": "node db/mysql/seed.js",
+    "cass:setup": "node db/cassandra/seed.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rpt15-fec-tabata-yoga/Therese_Reviews.git"
+    "url": "git+https://github.com/rpt15-drKarp/Richard_Reviews.git"
   },
-  "author": "Thérèse Brown",
+  "author": "Richard Kang",
   "license": "ISC",
   "engines": {
     "node": ">=12"
   },
   "bugs": {
-    "url": "https://github.com/rpt15-fec-tabata-yoga/Therese_Reviews/issues"
+    "url": "https://github.com/rpt15-drKarp/Richard_Reviews/issues"
   },
-  "homepage": "https://github.com/rpt15-fec-tabata-yoga/Therese_Reviews#readme",
+  "homepage": "https://github.com/rpt15-drKarp/Richard_Reviews#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "bluebird": "^3.7.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor.git",
@@ -39,13 +42,16 @@
     "axios": "^0.19.0",
     "babel-watch": "^7.0.0",
     "body-parser": "^1.19.0",
+    "cassandra-driver": "^4.2.0",
     "compression": "^1.7.4",
     "compression-webpack-plugin": "^3.0.0",
+    "concurrently": "^4.1.2",
     "cors": "^2.8.5",
     "css-loader": "^3.2.0",
     "express": "^4.17.1",
     "faker": "^4.1.0",
     "mongoose": "^5.6.9",
+    "mysql": "^2.17.1",
     "nodemon": "^1.19.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

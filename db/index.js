@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://database/reviews', {useNewUrlParser: true});
+const db = mongoose.connect('mongodb://localhost/reviews', { useNewUrlParser: true });
+const Promise = require('bluebird');
 
-let db = mongoose.connection;
-db.on('error', console.error.bind(console, 'mongodb connection error'));
-db.once('open', () => {
+let dbConnection = mongoose.connection;
+dbConnection.on('error', console.error.bind(console, 'mongodb connection error'));
+dbConnection.once('open', () => {
   console.log('connected to mongoDb');
 });
 
-const Review = mongoose.model('reviews', {
+const schema = new mongoose.Schema({
   game: String,
   gameId: Number,
   author: String,
@@ -22,13 +23,49 @@ const Review = mongoose.model('reviews', {
   funny: Number,
   comments: Number,
   userPhoto: String
-});
+})
+
+const Review = mongoose.model('Reviews', schema);
 
 const fetch = (gameId) => {
   return Review.find({gameId: gameId});
 };
 
+const update = (gameId, changes) => {
+  Review.updateOne({gameId: gameId}, changes, (err, res) => {
+    if (err) {
+      throw(err);
+    } else {
+      return res;
+    };
+  })
+};
+
+const remove = (gameId) => {
+  Review.deleteOne({gameId: gameId}, (err) => {
+    if (err) {
+      throw(err);
+    } else {
+      return `${gameId} deleted.`
+    }
+  })
+}
+
+const add = (obj) => {
+  Review.insertMany(obj, (err, reviews) => {
+    if (err) {
+      throw(err);
+    } else {
+      return 'Successfully created a new review!';
+    }
+  })
+};
+
 module.exports = {
+  db,
   Review,
-  fetch
+  fetch,
+  update,
+  remove,
+  add
 };

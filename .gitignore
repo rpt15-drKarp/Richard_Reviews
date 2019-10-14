@@ -5,6 +5,7 @@
 npm
 npm-debug.log
 node_modules/
+executionTest.js
 
 pids
 *.pid

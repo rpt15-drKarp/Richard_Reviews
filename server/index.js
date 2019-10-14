@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const db = require('../db/index.js');
+const db = require('../db/api.js');
 const compression = require('compression');
 const app = express();
 const port = 3001;
@@ -28,6 +28,34 @@ app.get('/api/reviews/:gameId', (req, res) => {
   });
 });
 
+app.post('/api/reviews', (req, res) => {
+  db.add(req.body).then((data) => {
+    res.status(200);
+    res.send(JSON.stringify(data));
+  }).catch((err) => {
+    res.status(500).send({ error: 'Unable to create this review from the database' });
+  });
+});
+
+app.put('/api/reviews', (req, res) => {
+  db.update(req.body.gameId, req.body).then((data) => {
+    res.status(200);
+    res.send(JSON.stringify(data));
+  }).catch((err) => {
+    res.status(500).send({ error: 'Unable to update this review from the database' });
+  });
+});
+
+app.delete('/api/reviews', (req, res) => {
+  db.remove(req.body.gameId).then((data) => {
+    res.status(200);
+    res.send(JSON.stringify(data));
+  }).catch((err) => {
+    res.status(500).send({ error: 'Unable to delete this review from the database' });
+  });
+});
+
 app.listen(port, () => {
   console.log(`App listening on ${port}`);
+  console.log( `Database being used: ${process.env.DB}`)
 });
