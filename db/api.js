@@ -1,68 +1,90 @@
-const noSql = require('./cassandra/index.js')
-const sql = require('./mysql/index.js')
+const Promise = require('bluebird');
+let dbUsed = process.env.DB;
+let sql = '';
+let noSql = '';
+if (dbUsed === 'mysql') {
+  sql = Promise.promisifyAll(require('./mysql/index.js'));
+} else if (dbUsed === 'cassandra') {
+  noSql = Promise.promisifyAll(require('./cassandra/index.js'));
+}
 
-let dbUsed = process.env.DB
-
-const fetch = (gameId, callback) => {
+const fetch = (gameId) => {
   if (dbUsed === 'mysql') {
-    sql.pool.query(`SELECT * FROM review WHERE game_id = ${gameId}`, (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return sql.queryAsync(`SELECT * FROM review WHERE game_id = ${gameId}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else if (dbUsed === 'cassandra') {
-    noSql.client.execute(`SELECT * FROM reviews_db.reviews WHERE game_id = ${gameId}`, (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return noSql.executeAsync(`SELECT * FROM reviews_db.reviews WHERE game_id = ${gameId}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results.rows))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else {
     console.log ('The database being used is not supported by this app.')
   };
 };
 
-const update = (gameId, obj, callback) => {
+const update = (gameId, obj) => {
   if (dbUsed === 'mysql') {
-    sql.pool.query(`UPDATE games SET ${obj.col} = ${obj.val} WHERE game_id = ${gameId}`, (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return sql.queryAsync(`UPDATE review SET ${obj.col} = ${obj.val} WHERE game_id = ${gameId}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else if (dbUsed === 'cassandra') {
-    noSql.client.execute(`UPDATE games SET ${obj.col} = ${obj.val} WHERE game_id = ${gameId}`, (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return noSql.executeAsync(`UPDATE review SET ${obj.col} = ${obj.val} WHERE game_id = ${gameId}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results.rows))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else {
     console.log ('The database being used is not supported by this app.')
   };
 };
 
-const remove = (gameId, callback) => {
+const remove = (gameId) => {
   if (dbUsed === 'mysql') {
-    sql.pool.query(`DELETE FROM review WHERE game_id = ${gameId}`, (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return sql.queryAsync(`DELETE FROM review WHERE game_id = ${gameId}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else if (dbUsed === 'cassandra') {
-    noSql.client.execute(`DELETE FROM review WHERE game_id = ${gameId}`, (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return noSql.executeAsync(`DELETE FROM review WHERE game_id = ${gameId}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results.rows))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else {
     console.log ('The database being used is not supported by this app.')
   };
 };
 
-const add = (review, callback) => {
+const add = (review) => {
   if (dbUsed === 'mysql') {
-    sql.pool.query(`INSERT INTO review (game, author, numOfGames, numOfReviews, posted, recordHours, body, recommended, helpful, unhelpful, funny, comments, userPhoto) VALUES ?`, [review], (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return sql.queryAsync(`INSERT INTO review(author, numOfGames, numOfReviews, posted, recordHours, body, recommended, helpful, unhelpful, funny, comments, userPhoto, game_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, review).then((results) => {
+      console.log(results.insertId);
+      let data = JSON.parse(JSON.stringify(results));
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else if (dbUsed === 'cassandra') {
     //need to get a game_id and push it to the review array
-    noSql.client.execute(`INSERT INTO reviews_db.reviews (game_id, game, author, numOfGames, numOfReviews, posted, recordHours, body, recommended, helpful, unhelpful, funny, comments, userPhoto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [review], (err, results) => {
-      if (err) {throw err;};
-      callback(null, results);
-    })
+    return noSql.executeAsync(`INSERT INTO reviews_db.reviews (game_id, game, author, numOfGames, numOfReviews, posted, recordHours, body, recommended, helpful, unhelpful, funny, comments, userPhoto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, review, { prepare: true }).then((results) => {
+      let data = JSON.parse(JSON.stringify(results.rows))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
+  } else {
+    console.log ('The database being used is not supported by this app.')
+  };
+};
+
+const fetchMult = (limit) => {
+  if (dbUsed === 'mysql') {
+    return sql.queryAsync(`SELECT * FROM review LIMIT ${limit}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
+  } else if (dbUsed === 'cassandra') {
+    return noSql.executeAsync(`SELECT * FROM reviews_db.reviews LIMIT ${limit}`).then((results) => {
+      data = JSON.parse(JSON.stringify(results.rows))
+      return data;
+    }).catch((err) => {if(err) {throw err}});
   } else {
     console.log ('The database being used is not supported by this app.')
   };
@@ -72,5 +94,6 @@ module.exports = {
   fetch,
   update,
   remove,
-  add
+  add,
+  fetchMult
 };

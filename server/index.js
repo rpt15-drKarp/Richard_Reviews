@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -28,8 +29,18 @@ app.get('/api/reviews/:gameId', (req, res) => {
   });
 });
 
+app.get('/api/reviews/mult/:limit', (req, res) => {
+  db.fetchMult(req.params.limit).then((data) => {
+    res.status(200);
+    res.send(JSON.stringify(data));
+  }).catch((err) => {
+    res.status(500).send({ error: 'Unable to fetch reviews from the database' });
+  });
+});
+
 app.post('/api/reviews', (req, res) => {
-  db.add(req.body).then((data) => {
+  let newReview = JSON.parse(req.body.review)
+  db.add(newReview).then((data) => {
     res.status(200);
     res.send(JSON.stringify(data));
   }).catch((err) => {

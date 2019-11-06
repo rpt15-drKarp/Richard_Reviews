@@ -1,10 +1,10 @@
 const faker = require('faker');
 
-module.exports = (numOfData, callback) => {
+module.exports = (numOfData, id, callback) => {
   let json = [];
   for (let i = 0; i < numOfData; i++) {
     let newReview = [];
-    newReview.push(faker.company.companyName());
+    //newReview.push(faker.company.companyName());
     newReview.push(faker.internet.userName());
     newReview.push(faker.random.number());
     newReview.push(faker.random.number());
@@ -17,6 +17,7 @@ module.exports = (numOfData, callback) => {
     newReview.push(faker.random.number());
     newReview.push(faker.random.number());
     newReview.push(faker.image.avatar());
+    newReview.push(id);
     if(numOfData===1) {
       callback(null, newReview);
     } else {
