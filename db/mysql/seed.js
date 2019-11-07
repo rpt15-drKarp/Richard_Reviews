@@ -31,11 +31,13 @@ const seed = async (numOfRecords) => {
       let reviewsAry = [].concat(...newReviews);
       reviewsGenerated.push(reviewsAry);
     //increasing the number of record that are generated to be inserted allocated memory more efficiently
-    if ((n > 0) && !((n + 1) % 1000)) {
+    if ((n > 0) && !((n + 1) % 500)) {
+      // const mem = process.memoryUsage().heapUsed;
+      // console.log(`Heap used: ${Math.round(mem / 1024 / 1024 * 100) / 100} MB`);
       //adding concurrency doesn't seem to be working as I would expect..
       await Promise.map(reviewsGenerated, (reviews) => {
         return pool.queryAsync(sqlString, [reviews]).catch(err => {throw err;});
-      }).then(() => {
+      }, {concurrency: 100}).then(() => {
         if (n === (loopCnt-1)) {
           console.log('Database seeded.');
           // console.log(process.memoryUsage());
