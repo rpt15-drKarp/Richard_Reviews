@@ -8,6 +8,7 @@
     "build": "webpack -d --watch",
     "start": "nodemon server/index.js",
     "start:mysql": "set DB=mysql&&nodemon server/index.js",
+    "start:ec2": "DB='mysql' nodemon server/index.js",
     "start:cass": "set DB=cassandra&&nodemon server/index.js",
     "startDocker": "concurrently --kill-others \"npm run seed\" \"npm run start\"",
     "seed": "node db/seed.js",
