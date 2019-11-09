@@ -6,6 +6,7 @@ const db = require('../db/api.js');
 const compression = require('compression');
 const app = express();
 const port = 3001;
+const path = require('path');
 
 app.get('*.js', (req, res, next) => {
   req.url = req.url + '.gz';
@@ -19,6 +20,10 @@ app.use(cors());
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/loaderio-0cbeca2a61656a04739e2f907fadabe7', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/loaderio-0cbeca2a61656a04739e2f907fadabe7.txt'));
+})
 
 app.get('/api/reviews/:gameId', (req, res) => {
   db.fetch(req.params.gameId).then((data) => {
