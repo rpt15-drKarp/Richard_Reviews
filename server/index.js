@@ -21,9 +21,9 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/loaderio-0cbeca2a61656a04739e2f907fadabe7/', (req, res) => {
+app.get('/loaderio-5d4657164326c0dad61d03bbcc2990b9', (req, res) => {
   console.log(req.url)
-  res.sendFile(path.join(__dirname, '../public/loaderio-0cbeca2a61656a04739e2f907fadabe7.txt'));
+  res.sendFile(path.join(__dirname, '/loaderio-5d4657164326c0dad61d03bbcc2990b9.txt'));
 })
 
 app.get('/api/reviews/:gameId', (req, res) => {
