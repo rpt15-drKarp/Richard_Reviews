@@ -14,18 +14,12 @@ app.get('*.js', (req, res, next) => {
   next();
 });
 
-app.use('/loaderio-5d4657164326c0dad61d03bbcc2990b9', express.static(__dirname + '/../public/loaderio-5d4657164326c0dad61d03bbcc2990b9.txt'))
 app.use('/:gameId', express.static(__dirname + '/../public'));
 app.use('/', express.static(__dirname + '/../public'));
 app.use(cors());
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// app.get('/loaderio-5d4657164326c0dad61d03bbcc2990b9', (req, res) => {
-//   console.log(req.url)
-//   res.sendFile(path.join(__dirname, '../public/loaderio-5d4657164326c0dad61d03bbcc2990b9.txt'));
-// })
 
 app.get('/api/reviews/:gameId', (req, res) => {
   db.fetch(req.params.gameId).then((data) => {
@@ -72,6 +66,11 @@ app.delete('/api/reviews', (req, res) => {
     res.status(500).send({ error: 'Unable to delete this review from the database' });
   });
 });
+
+app.get('/', (req, res) => {
+  console.log(req.url)
+  res.sendFile(path.join(__dirname, '../public/loaderio-9fca7766faf559127272cbb33cc62ba2.txt'));
+})
 
 app.listen(port, () => {
   console.log(`App listening on ${port}`);
