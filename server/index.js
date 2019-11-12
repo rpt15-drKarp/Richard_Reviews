@@ -22,8 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/api/reviews', (req, res) => {
-  console.log(req.params.gameId)
-  db.fetch(req.params.gameId).then((data) => {
+  console.log(req.query.gameId)
+  db.fetch(req.query.gameId).then((data) => {
     res.status(200);
     res.send(JSON.stringify(data));
   }).catch((err) => {
@@ -31,8 +31,8 @@ app.get('/api/reviews', (req, res) => {
   });
 });
 
-app.get('/api/reviews/mult/:limit', (req, res) => {
-  db.fetchMult(req.params.limit).then((data) => {
+app.get('/api/reviews/mult', (req, res) => {
+  db.fetchMult(req.query.query).then((data) => {
     res.status(200);
     res.send(JSON.stringify(data));
   }).catch((err) => {
