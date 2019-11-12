@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/api/reviews/:gameId', (req, res) => {
+  console.log(req.params.gameId)
   db.fetch(req.params.gameId).then((data) => {
     res.status(200);
     res.send(JSON.stringify(data));
@@ -67,7 +68,7 @@ app.delete('/api/reviews', (req, res) => {
   });
 });
 
-app.all('*', (req, res) => {
+app.all('/loaderio-9fca7766faf559127272cbb33cc62ba2', (req, res) => {
   console.log(req.url)
   res.sendFile(path.join(__dirname, '../public/loaderio-9fca7766faf559127272cbb33cc62ba2.txt'));
 })
