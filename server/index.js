@@ -21,7 +21,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/api/reviews/:gameId', (req, res) => {
+app.get('/api/reviews', (req, res) => {
   console.log(req.params.gameId)
   db.fetch(req.params.gameId).then((data) => {
     res.status(200);
