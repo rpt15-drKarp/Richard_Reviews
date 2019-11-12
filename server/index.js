@@ -67,7 +67,7 @@ app.delete('/api/reviews', (req, res) => {
   });
 });
 
-app.get('/', (req, res) => {
+app.all('*', (req, res) => {
   console.log(req.url)
   res.sendFile(path.join(__dirname, '../public/loaderio-9fca7766faf559127272cbb33cc62ba2.txt'));
 })
