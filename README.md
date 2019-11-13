@@ -71,13 +71,17 @@ put -> api/reviews -> send gameId in body
 
 Connect to mysql by running `mysql -u root -p`. This will prompt you to enter your root user's password.
 
-Upon getting to mysql terminal, run `source {path to db\mysql\schema.sql` if there were changes made to the schema.
+Upon getting to mysql terminal, run `source {path to db\mysql\schema.sql}` if there were changes made to the schema.
 
 Implement mysql library for Javascript via `npm install mysql`.
 
 Upon doing some research 2 things that I found that were interesting for performance.
   1. It is more efficient to run multiple INSERT statements than to run one INSERT statement with multiple values.
   2. A for loop is more efficient than a forEach loop.
+
+### Cassandra
+
+Start cassandra server by running `cassandra` in your terminal.
 
 ### DBMS Benchmarks
 
@@ -100,7 +104,55 @@ Upon doing some research 2 things that I found that were interesting for perform
 | MySQL     | POST  | 100  | 11.2 ms | 0.00% |
 | MySQL     | POST  | 1000 | 15.5 ms | 0.00% |
 
-### Deployed App Benchmarks
+### Deployed App
+
+Start by launching an EC2 instance with Amazon Linux AMI (NOT Linux 2)
+
+Update EC2 instance:
+```
+sudo yum update
+```
+
+Install node in EC2 instance
+```
+Install nvm:
+  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+Activiate nvm:
+  . ~/.nvm/nvm.sh
+Install node version (used 10.16 for this service):
+  nvm install 10.16
+```
+
+Install git and clone service:
+```
+  sudo yum install -y git
+  git clone {git repo}
+  cd {repo name}
+  npm install
+```
+
+Install MySQL in EC2 instance:
+
+Make sure your EC2 instance's security group includes an inbound rule for port 3306 (the default MySQL port).
+
+Initially had trouble installing mysql-server on EC2 instance using mysql-server package.
+Discovered that this was not due to any code issues but rather because I had originally launched my instance with the Linux 2 AMI, which does not come with an out-of-the-box mysql repo.
+```
+Install MySQL server:
+  sudo yum install mysql-server
+Set up MySQL server to automatically start with instance reboot:
+  chkconfig mysqld on
+Start MySQL server:
+  service mysqld start
+Update root user's password:
+  mysqladmin -u root password {new password}
+Seed database:
+  source /home/ec2-user/Richard_Reviews/db/mysql/schema.sql
+  cd Richard_Reviews
+  npm run mysql:setup
+```
+
+#### Deployed App Benchmarks
 
 | DBMS      | Route | RPS  | LATENCY | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- |
@@ -112,3 +164,9 @@ Upon doing some research 2 things that I found that were interesting for perform
 | MySQL     | POST  | 10   | 7 ms | 0.00% |
 | MySQL     | POST  | 100  | 4 ms | 0.00% |
 | MySQL     | POST  | 1000 | 4070 ms | 60.8% |
+
+### Optimizations
+
+#### Horizontal Scaling
+
+Separate server and database into 2 EC2 instances
