@@ -104,10 +104,10 @@ Upon doing some research 2 things that I found that were interesting for perform
 
 | DBMS      | Route | RPS  | LATENCY | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- |
-| MySQL     | GET   | 1    | 5 ms  | 0.00% |
-| MySQL     | GET   | 10   | 4 ms | 0.00% |
-| MySQL     | GET   | 100  | 6.02 ms | 0.00% |
-| MySQL     | GET   | 1000 | 41.9 ms | 0.00% |
+| MySQL     | GET   | 1    | 9 ms  | 0.00% |
+| MySQL     | GET   | 10   | 11 ms | 0.00% |
+| MySQL     | GET   | 100  | 5 ms | 0.00% |
+| MySQL     | GET   | 1000 | 5749 ms | 71.2% |
 | MySQL     | POST  | 1    | 4.26 ms | 0.00% |
 | MySQL     | POST  | 10   | 7.22 ms | 0.00% |
 | MySQL     | POST  | 100  | 11.2 ms | 0.00% |

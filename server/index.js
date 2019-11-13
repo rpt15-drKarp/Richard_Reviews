@@ -6,7 +6,6 @@ const db = require('../db/api.js');
 const compression = require('compression');
 const app = express();
 const port = 3001;
-const path = require('path');
 
 app.get('*.js', (req, res, next) => {
   req.url = req.url + '.gz';
@@ -22,7 +21,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/api/reviews', (req, res) => {
-  console.log(req.query.gameId)
   db.fetch(req.query.gameId).then((data) => {
     res.status(200);
     res.send(JSON.stringify(data));
@@ -67,11 +65,6 @@ app.delete('/api/reviews', (req, res) => {
     res.status(500).send({ error: 'Unable to delete this review from the database' });
   });
 });
-
-app.all('/loaderio-9fca7766faf559127272cbb33cc62ba2', (req, res) => {
-  console.log(req.url)
-  res.sendFile(path.join(__dirname, '../public/loaderio-9fca7766faf559127272cbb33cc62ba2.txt'));
-})
 
 app.listen(port, () => {
   console.log(`App listening on ${port}`);
