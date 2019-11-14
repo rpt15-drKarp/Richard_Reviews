@@ -169,4 +169,23 @@ Seed database:
 
 #### Horizontal Scaling
 
-Separate server and database into 2 EC2 instances
+Separate server and database into 2 EC2 instances.
+`Make sure to point MySQL host to database instance`
+
+Grant access to database EC2 instance from any other instance:
+```
+  mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'root_password';
+  mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+  mysql> FLUSH PRIVILEGES;
+```
+
+| DBMS      | Route | RPS  | LATENCY | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- |
+| MySQL     | GET   | 1    | 9 ms  | 0.00% |
+| MySQL     | GET   | 10   | 11 ms | 0.00% |
+| MySQL     | GET   | 100  | 5 ms | 0.00% |
+| MySQL     | GET   | 1000 | 5749 ms | 71.2% |
+| MySQL     | POST  | 1    | 8 ms | 0.00% |
+| MySQL     | POST  | 10   | 7 ms | 0.00% |
+| MySQL     | POST  | 100  | 4 ms | 0.00% |
+| MySQL     | POST  | 1000 | 4070 ms | 60.8% |
