@@ -160,6 +160,9 @@ Seed database:
 | MySQL     | GET   | 10   | 11 ms | 0.00% |
 | MySQL     | GET   | 100  | 5 ms | 0.00% |
 | MySQL     | GET   | 1000 | 5749 ms | 71.2% |
+| MySQL     | GET   | 2000   | ms | 0.00% |
+| MySQL     | GET   | 5000  | ms | 0.00% |
+| MySQL     | GET   | 10000 | ms | 71.2% |
 | MySQL     | POST  | 1    | 8 ms | 0.00% |
 | MySQL     | POST  | 10   | 7 ms | 0.00% |
 | MySQL     | POST  | 100  | 4 ms | 0.00% |
@@ -181,10 +184,10 @@ Grant access to database EC2 instance from any other instance:
 
 | DBMS      | Route | RPS  | LATENCY | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- |
-| MySQL     | GET   | 1    | 9 ms  | 0.00% |
-| MySQL     | GET   | 10   | 11 ms | 0.00% |
-| MySQL     | GET   | 100  | 5 ms | 0.00% |
-| MySQL     | GET   | 1000 | 5749 ms | 71.2% |
+| MySQL     | GET   | 1    | 10 ms  | 0.00% |
+| MySQL     | GET   | 10   | 9 ms | 0.00% |
+| MySQL     | GET   | 100  | 6 ms | 0.00% |
+| MySQL     | GET   | 1000 | 5098 ms | 75.3% |
 | MySQL     | POST  | 1    | 8 ms | 0.00% |
 | MySQL     | POST  | 10   | 7 ms | 0.00% |
 | MySQL     | POST  | 100  | 4 ms | 0.00% |
