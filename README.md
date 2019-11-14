@@ -188,6 +188,9 @@ Grant access to database EC2 instance from any other instance:
 | MySQL     | GET   | 10   | 9 ms | 0.00% |
 | MySQL     | GET   | 100  | 6 ms | 0.00% |
 | MySQL     | GET   | 1000 | 5098 ms | 75.3% |
-| MySQL     | GET   | 2000   | ms | % |
-| MySQL     | GET   | 5000  | ms | % |
-| MySQL     | GET   | 10000 | ms | % |
+| MySQL     | GET   | 2000   | 8038 ms | 72.1% |
+| MySQL     | GET   | 5000  | 14841 ms | ERROR OUT |
+| MySQL     | GET   | 10000 | 23223 ms | ERROR OUT |
+
+#### Caching with Redis
+
