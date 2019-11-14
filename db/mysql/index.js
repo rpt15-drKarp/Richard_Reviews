@@ -1,12 +1,11 @@
 const mysql = require('mysql');
 
-// 3.83.172.130
 const pool = mysql.createPool({
   connectionLimit: 1000,
   connectTimeout: 60 * 60 * 1000,
   acquireTimeout: 60 * 60 * 1000,
   timeout: 60 * 60 * 1000,
-  host: 'localhost',
+  host: '3.83.172.130',
   user: 'root',
   password: 'root',
   database: 'reviews_db'
