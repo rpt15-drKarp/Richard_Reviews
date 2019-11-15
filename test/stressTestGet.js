@@ -7,7 +7,7 @@ export let options = {
 };
 
 export default function() {
-  let res = http.get(`http://localhost:3001/api/reviews/mult/1000`);
+  let res = http.get(`http://localhost:3001/api/reviews/?gameId=100`);
   check(res, {
     "Success get": (r) => r.status == 200
   });
