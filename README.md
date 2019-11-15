@@ -237,7 +237,7 @@ Test Redis server is active:
 | MySQL     | GET   | 1    | 6 ms  | 0.00% |
 | MySQL     | GET   | 10   | 4 ms | 0.00% |
 | MySQL     | GET   | 100  | 2 ms | 0.00% |
-| MySQL     | GET   | 1000 | 3090 ms | 0.00% |
-| MySQL     | GET   | 2000   | 6097 ms | 0.00% |
+| MySQL     | GET   | 1000 | 2925 ms | 0.00% |
+| MySQL     | GET   | 2000   | 6030 ms | 0.00% |
 | MySQL     | GET   | 5000  | 6386 ms | 50.4% |
 | MySQL     | GET   | 10000 | 9431 ms | 63.4% |
