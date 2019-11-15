@@ -182,6 +182,8 @@ Grant access to database EC2 instance from any other instance:
   mysql> FLUSH PRIVILEGES;
 ```
 
+##### Horizontal Scalaing Benchmarks
+
 | DBMS      | Route | RPS  | LATENCY | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- |
 | MySQL     | GET   | 1    | 10 ms  | 0.00% |
@@ -194,3 +196,48 @@ Grant access to database EC2 instance from any other instance:
 
 #### Caching with Redis
 
+Setup Redis on same EC2 instance as server:
+```
+{Make sure you are at the root directory}
+  sudo yum install build-essential
+  wget http://download.redis.io/redis-stable.tar.gz
+  tar xvzf redis-stable.tar.gz
+  cd redis-stable
+  sudo make distclean
+  sudo make
+  sudo make install
+```
+
+Start Redis server in the background:
+```
+Edit redis.conf file:
+  vim redis.conf
+    protected-mode no
+    daemonize yes
+    [Esc] + :x + [Enter]
+  cd
+  redis-server ~/redis-stable/redis.conf
+
+OR
+
+Use daemonize parameter:
+  redis-server --daemonize yes
+```
+
+Test Redis server is active:
+```
+  redis-cli ping
+  (terminal should log PONG)
+```
+
+##### Redis Cache Benchmarks
+
+| DBMS      | Route | RPS  | LATENCY | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- |
+| MySQL     | GET   | 1    | 6 ms  | 0.00% |
+| MySQL     | GET   | 10   | 4 ms | 0.00% |
+| MySQL     | GET   | 100  | 2 ms | 0.00% |
+| MySQL     | GET   | 1000 | 3090 ms | 0.00% |
+| MySQL     | GET   | 2000   | 6097 ms | 0.00% |
+| MySQL     | GET   | 5000  | 6386 ms | 50.4% |
+| MySQL     | GET   | 10000 | 9431 ms | 63.4% |
