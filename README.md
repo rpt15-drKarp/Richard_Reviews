@@ -117,7 +117,7 @@ Install node in EC2 instance
 ```
 Install nvm:
   curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
-Activiate nvm:
+Activate nvm:
   . ~/.nvm/nvm.sh
 Install node version (used 10.16 for this service):
   nvm install 10.16
@@ -141,9 +141,9 @@ Discovered that this was not due to any code issues but rather because I had ori
 Install MySQL server:
   sudo yum install mysql-server
 Set up MySQL server to automatically start with instance reboot:
-  chkconfig mysqld on
+  sudo chkconfig mysqld on
 Start MySQL server:
-  service mysqld start
+  sudo service mysqld start
 Update root user's password:
   mysqladmin -u root password {new password}
 Seed database:
@@ -199,7 +199,7 @@ Grant access to database EC2 instance from any other instance:
 Setup Redis on same EC2 instance as server:
 ```
 {Make sure you are at the root directory}
-  sudo yum install build-essential
+  sudo yum -y install gcc
   wget http://download.redis.io/redis-stable.tar.gz
   tar xvzf redis-stable.tar.gz
   cd redis-stable
@@ -241,3 +241,57 @@ Test Redis server is active:
 | MySQL     | GET   | 2000   | 6030 ms | 0.00% |
 | MySQL     | GET   | 5000  | 6386 ms | 50.4% |
 | MySQL     | GET   | 10000 | 9431 ms | 63.4% |
+
+#### Load Balancing with Nginx
+
+Start a new EC2 instance
+
+Setup new EC2 instance for Nginx Load Balancer:
+```
+  sudo yum update
+  sudo yum install nginx
+```
+
+Check that initial Nginx server is working:
+```
+  sudo service nginx restart
+  In your browser, go to ip address
+```
+
+Configure nginx.conf:
+```
+  sudo vim /etc/nginx/nginx.conf
+Things to add to http key:
+  http {
+    upstream app {
+        server {first EC2 instance ip address}:3001;
+        server {second EC2 instance ip address}:3001;
+    }
+
+    server {
+        location / {
+            proxy_pass http://app;
+        }
+    }
+  }
+  [ESC] + :x + [Enter]
+  sudo service nginx restart
+```
+
+##### Nginx Load Balancer Benchmarks (2 servers)
+
+| DBMS      | Route | RPS  | LATENCY | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- |
+| MySQL     | GET   | 1000 | 3 ms | 0.00% |
+| MySQL     | GET   | 2000   | 219 ms | 3.30% |
+| MySQL     | GET   | 5000  | 4314 ms | 33.8% |
+| MySQL     | GET   | 10000 | 7423 ms | 40.6% |
+
+##### Nginx Load Balancer Benchmarks (3 servers)
+
+| DBMS      | Route | RPS  | LATENCY | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- |
+| MySQL     | GET   | 1000 | 2 ms | 0.00% |
+| MySQL     | GET   | 2000   | 3 ms | 0.00% |
+| MySQL     | GET   | 5000  | 3841 ms | 28.0% |
+| MySQL     | GET   | 10000 | 6853 ms | 36.3% |
